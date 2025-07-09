@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>OnlyOffice Editor</title>
+  <script src="https://goal-path.ru/onlyoffice/web-apps/apps/api/documents/api.js"></script>
+  <style>
+    html, body { height:100%; margin:0 }
+    #placeholder { width:100%; height:100%; }
+  </style>
+</head>
+<body>
+  <div id="placeholder"></div>
+    <script>
+    (function(){
+    const params = new URLSearchParams(window.location.search);
+    const fileKey = params.get('fileKey');
+    const fileId = params.get('fileId');
+    if (!fileKey) {
+        document.body.innerHTML = '<pre style="color:red;">Ошибка: fileKey не указан</pre>';
+        return;
+    }
+
+    if (!fileId) {
+        document.body.innerHTML = '<pre style="color:red;">Ошибка: fileId не указан</pre>';
+        return;
+    }
+
+    // Жестко указываем URL к вашему бэку
+    const configUrl = `https://goal-path.ru/api/onlyoffice/config?fileKey=`
+        + encodeURIComponent(fileKey) + '&fileId=' + encodeURIComponent(fileId);
+
+    // Берем токен из localStorage (который вы сохранили при логине)
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+        document.body.innerHTML = '<pre style="color:red;">Ошибка: отсутствует accessToken</pre>';
+        return;
+    }
+
+    fetch(configUrl, {
+        headers: {
+        'Authorization': 'Bearer ' + token
+        }
+    })
+        .then(res => {
+        if (!res.ok) throw new Error(`Ошибка HTTP ${res.status}`);
+        return res.json();
+        })
+        .then(config => {
+        new DocsAPI.DocEditor('placeholder', config);
+        })
+        .catch(err => {
+        document.body.innerHTML =
+            '<pre style="color:red;">Ошибка загрузки редактора:\n' + err.message + '</pre>';
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+.month-view {
+    .calendar-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+  
+    .calendar-day {
+      min-height: 120px;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 10px;
+      background: white;
+      box-shadow: 0 25px 1px rgba(0, 0, 0, 0.02);
+      position: relative;
+  
+      &:hover {
+        border: 1px solid #6366f1;
+      }
+  
+      &.other-month {
+        background: #f8f9fa;
+        opacity: 0.6;
+      }
+  
+      .day-header {
+        font-weight: 600;
+        margin-bottom: 8px;
+        position: relative;
+        padding-left: 8px;
+        font-size: 13px;
+        color: #333;
+  
+        .today-marker {
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 4px;
+          height: 80%;
+          background: #6366f1;
+          border-radius: 2px;
+        }
+      }
+  
+      .day-events {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        max-height: 90px;
+        overflow-y: auto;
+        padding-right: 2px;
+  
+        &::-webkit-scrollbar {
+          width: 4px;
+        }
+  
+        &::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 2px;
+        }
+  
+        &::-webkit-scrollbar-thumb {
+          background: #ccc;
+          border-radius: 2px;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .month-view {
+      .calendar-row {
+        gap: 4px;
+        margin-bottom: 4px;
+      }
+  
+      .calendar-day {
+        min-height: 80px;
+        padding: 6px;
+        
+        .day-events {
+          max-height: 60px;
+        }
+  
+        .day-header {
+          font-size: 12px;
+          margin-bottom: 4px;
+        }
+      }
+    }
+  }

@@ -1,0 +1,257 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  primarykey String   @id @default(uuid()) @map("primarykey") // UUID как primary key
+  login      String   @unique
+  email      String   @unique
+  password   String
+  firstName  String   @map("firstname")
+  lastName   String   @map("lastname")
+  role       String?
+  roleRef    Role?    @relation("accountRole", fields: [role], references: [primarykey]) // Связать с role
+  createAt   DateTime @default(now()) @map("createat")
+  editAt     DateTime @default(now()) @updatedAt @map("editat")
+  avatarUrl  String?  @map("avatarurl")
+  status     String?
+  creator    String?
+  creatorRef Role?    @relation("accountCreator", fields: [creator], references: [primarykey])
+
+  createdTeams    Team[]
+  createdProjects Project[]
+  assignedTasks   Task[]           @relation("taskAssignee")
+  createdTasks    Task[]           @relation("taskAuthor")
+  teamMembers     TeamMember[]
+  taskComments    TaskComment[]
+  taskAttachments TaskAttachment[]
+  chatMembers     ChatMember[]
+  createdChats    Chat[]
+  chatMessages    ChatMessage[]
+  userSettings    UserSettings?    @relation("accountRef")
+  ReadMessage     ReadMessage[]    @relation("accountId")
+
+  @@index([email], name: "idx_accounts_email") // Индекс для email
+  @@index([login], name: "idx_accounts_login") // Индекс для login
+  @@map("accounts") // Указываем, что таблица называется "accounts"
+}
+
+model Role {
+  primarykey String   @id @default(uuid()) @map("primarykey") // UUID как primary key
+  name       String
+  createAt   DateTime @default(now()) @map("createat")
+  editAt     DateTime @default(now()) @updatedAt @map("editat")
+
+  role    Account[] @relation("accountRole")
+  creator Account[] @relation("accountCreator")
+
+  @@map("roles")
+}
+
+model Team {
+  primarykey  String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now()) @map("createat")
+  createdBy   String   @map("createBy")
+  createdRef  Account  @relation(fields: [createdBy], references: [primarykey])
+
+  members  TeamMember[]
+  projects Project[]
+
+  @@map("teams")
+}
+
+model TeamMember {
+  primarykey String   @id @default(uuid())
+  teamId     String   @map("team")
+  team       Team     @relation(fields: [teamId], references: [primarykey])
+  accountId  String   @map("accountid")
+  account    Account  @relation(fields: [accountId], references: [primarykey])
+  role       String
+  joinedAt   DateTime @default(now()) @map("joinedat")
+
+  @@map("teammembers")
+}
+
+model Project {
+  primarykey  String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now()) @map("createdat")
+  createdBy   String   @map("createby")
+  createdRef  Account  @relation(fields: [createdBy], references: [primarykey])
+  team        String   @map("team")
+  teamRef     Team     @relation(fields: [team], references: [primarykey])
+  status      String?
+
+  tasks Task[]
+
+  @@map("projects")
+}
+
+model Task {
+  primarykey    String    @id @default(uuid())
+  title         String
+  description   String?
+  project       String    @map("project")
+  projectRef    Project   @relation(fields: [project], references: [primarykey])
+  createdBy     String    @map("createby")
+  createdByRef  Account   @relation("taskAuthor", fields: [createdBy], references: [primarykey])
+  assignedTo    String?   @map("assignedto")
+  assignedToRef Account?  @relation("taskAssignee", fields: [assignedTo], references: [primarykey])
+  status        String
+  priority      String?
+  dueDate       DateTime? @map("duedate")
+  createdAt     DateTime  @default(now()) @map("createat")
+  updatedAt     DateTime  @default(now()) @updatedAt @map("updateat")
+
+  comments    TaskComment[]
+  attachments TaskAttachment[]
+  tags        TaskTag[]
+
+  @@map("tasks")
+}
+
+model TaskComment {
+  primarykey String   @id @default(uuid())
+  taskId     String   @map("taskid")
+  task       Task     @relation(fields: [taskId], references: [primarykey])
+  account    String   @map("account")
+  accountRef Account  @relation(fields: [account], references: [primarykey])
+  comment    String
+  createdAt  DateTime @default(now()) @map("createdat")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updatedat")
+
+  @@map("taskcomments")
+}
+
+model TaskAttachment {
+  primarykey  String   @id @default(uuid())
+  taskId      String   @map("task")
+  task        Task     @relation(fields: [taskId], references: [primarykey])
+  file        String
+  uploadedBy  String   @map("uploadedby")
+  uploadedRef Account  @relation(fields: [uploadedBy], references: [primarykey])
+  uploadedAt  DateTime @default(now()) @map("uploadedtat")
+
+  @@map("taskattachments")
+}
+
+model Tag {
+  primarykey String @id @default(uuid())
+  name       String
+  color      String
+
+  tasks TaskTag[]
+
+  @@map("tags")
+}
+
+model TaskTag {
+  primarykey String @id @default(uuid())
+  task       String @map("task")
+  taskRef    Task   @relation(fields: [task], references: [primarykey])
+  tag        String @map("tag")
+  tagRef     Tag    @relation(fields: [tag], references: [primarykey])
+
+  @@map("tasktags")
+}
+
+model UserSettings {
+  primarykey      String  @id @default(uuid())
+  account         String  @unique @map("accountid")
+  accountRef      Account @relation("accountRef", fields: [account], references: [primarykey])
+  theme           String
+  language        String
+  isNotifications Boolean @default(true) @map("isnotifications")
+
+  @@map("usersettings")
+}
+
+model File {
+  primarykey String   @id @default(uuid())
+  value      String
+  type       String
+  createdAt  DateTime @default(now()) @map("createdat")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updatedat")
+
+  @@map("file")
+}
+
+model Chat {
+  primarykey  String  @id @default(uuid())
+  title       String
+  description String?
+  photo       String?
+  account     String  @map("account")
+  accountRef  Account @relation(fields: [account], references: [primarykey])
+
+  members  ChatMember[]
+  messages ChatMessage[]
+
+  @@map("chat")
+}
+
+model ChatMember {
+  primarykey String  @id @default(uuid())
+  chatId     String  @map("chat")
+  chat       Chat    @relation(fields: [chatId], references: [primarykey])
+  account    String  @map("account")
+  accountRef Account @relation(fields: [account], references: [primarykey])
+
+  @@unique([chatId, account])
+  @@map("chat_members")
+}
+
+model ChatMessage {
+  primarykey String   @id @default(uuid())
+  chatId     String   @map("chat")
+  chat       Chat     @relation(fields: [chatId], references: [primarykey])
+  account    String   @map("account")
+  accountRef Account  @relation(fields: [account], references: [primarykey])
+  content    String
+  isEdited   Boolean  @default(false) @map("isedited")
+  createdAt  DateTime @default(now()) @map("createat")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updateat")
+
+  readStatus ReadMessage[]
+
+  @@map("chat_messages")
+}
+
+model ReadMessage {
+  message    String      @map("message")
+  messageRef ChatMessage @relation(fields: [message], references: [primarykey])
+  account    String      @map("account")
+  accountRef Account     @relation("accountId", fields: [account], references: [primarykey])
+  isRead     Boolean     @default(false) @map("isread")
+
+  @@id([message, account])
+  @@map("read_message")
+}
+
+model AppLog {
+  primarykey    String   @id @default(uuid())
+  category      String
+  priority      Int
+  timestamp     DateTime
+  machineName   String   @map("machinename")
+  appDomainName String   @map("appdomainname")
+  processId     String   @map("processid")
+  message       String
+
+  @@map("applogs")
+}

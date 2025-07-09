@@ -1,0 +1,112 @@
+.calendar-body {
+.day-view {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    height: calc(100vh - 250px);
+    position: relative;
+    overflow: auto;
+    scrollbar-width: none;
+    
+    .time-column {
+        margin-top: 30px;
+        position: relative;
+        border-right: 1px solid #eee;
+        background: #fff;
+    }
+
+    .day-content {
+        position: relative;
+        min-height: 1440px; 
+        width:calc(100);
+    }
+
+    .time-indicator {
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        pointer-events: none;
+
+        .time-line {
+            height: 2px;
+            background: #ff4757;
+            position: relative;
+            width: 100%;
+        }
+
+        .time-circle {
+            width: 10px;
+            height: 10px;
+            background: #ff4757;
+            border-radius: 50%;
+            position: absolute;
+            left: -4px;
+            top: -4px;
+        }
+    }
+
+    .day-event {
+        position: absolute;
+        width: 200px;
+        height: 30px;
+        border-radius: 6px;
+        padding: 20px 10px;
+        align-items: center;
+        cursor: pointer;
+        z-index: 2;
+
+        &:hover {
+            z-index: 2;
+        }
+
+        .compact-view {
+
+            .event-title {
+                color: white !important;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            }
+        }
+    }
+}
+
+.time-slot {
+    height: 60px;
+    position: relative;
+    font-size: 0.9em;
+
+    .time-label {
+        position: absolute;
+        top: -8px;
+        left: 5px;
+        color: #636e72;
+        background: white;
+        padding: 0 3px;
+        font-size: 0.8em;
+    }
+
+    .grid-line {
+        border-bottom: 1px solid #eee;
+        height: 1px;
+        width: calc(100% - 10px);
+        margin-left: 10px;
+    }
+}
+}
+
+@media (max-width: 768px) {
+    .day-view {
+        grid-template-columns: 40px 1fr;
+        height: calc(100vh - 150px);
+
+        .day-content {
+            min-height: 1200px;
+        }
+    }
+}
+
+.grid-line {
+    border-bottom: 1px solid #eee;
+    height: 1px;
+    width: calc(100% - 10px);
+    margin-left: 10px;
+}

@@ -1,0 +1,456 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../generated/prisma"
+  output = "../node_modules/.prisma/client"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  primarykey String    @id @default(uuid()) @map("primarykey") // UUID как primary key
+  login      String    @unique
+  email      String    @unique
+  isEmailVerified Boolean @default(false) @map("isemailverified")
+  password   String
+  firstName  String    @map("firstname")
+  lastName   String    @map("lastname")
+  role       String?
+  roleRef    Role?     @relation("accountRole", fields: [role], references: [primarykey]) // Связать с role
+  createAt DateTime  @default(now()) @map("createat")
+  editAt   DateTime  @default(now()) @updatedAt @map("editat")
+  avatarUrl  String?   @map("avatarurl")
+  status     String?
+  creator    String?
+  creatorRef Role?      @relation("accountCreator", fields: [creator], references: [primarykey])
+
+  createdTeams      Team[]
+  createdProjects   Project[]
+  assignedTasks     Task[] @relation("taskAssignee")
+  createdTasks      Task[] @relation("taskAuthor")
+  taskComments      TaskComment[]
+  taskAttachments   TaskAttachment[]
+  chatMembers       ChatMember[]
+  createdChats      Chat[]
+  chatMessages      ChatMessage[]
+  userSettings      UserSettings? @relation("accountRef")
+  ReadMessage ReadMessage[] @relation("accountId")
+  files File[] @relation("userRef")
+  
+  @@map("accounts") // Указываем, что таблица называется "accounts"
+  @@index([email], name: "idx_accounts_email") // Индекс для email
+  @@index([login], name: "idx_accounts_login") // Индекс для login
+  accountId ProjectMember[] @relation("accountId")
+  assignedById ProjectMember[] @relation("assignedById")
+  teamMember TeamMember[] @relation("TeamMemberAccount")
+  attendeesCalendar attendeesCalendar[] @relation("attendeesCalendar")
+  Calendar Calendar[] @relation("calendar")
+  CommentAttachment CommentAttachment[] @relation("commentAttachment")
+  File File[]
+  FileHierarchy FileHierarchy[]
+  Milestone Milestone[]
+  FileShare FileShare[]
+}
+
+model Role {
+  primarykey String    @id @default(uuid()) @map("primarykey") // UUID как primary key
+  name String
+  level     Int       @default(0)
+  createAt DateTime  @default(now()) @map("createat")
+  editAt   DateTime  @default(now()) @updatedAt @map("editat")
+
+  role Account[]       @relation("accountRole")
+  creator Account[]    @relation("accountCreator")
+
+  @@map("roles")
+}
+
+model ProjectRole {
+  primarykey String @id @default(uuid())
+  name       String // "PROJECT_ADMIN", "CONTRIBUTOR", "REVIEWER" и т.д.
+  level      Int    @default(0)
+  createAt DateTime  @default(now()) @map("createat")
+  editAt   DateTime  @default(now()) @updatedAt @map("editat")
+  
+  members    ProjectMember[]
+  
+  @@map("projectroles")
+}
+
+model ProjectMember {
+  primarykey    String @id @default(uuid())
+  projectId String  @map("projectid")
+  project   Project @relation(fields: [projectId], references: [primarykey])
+  accountId String  @map("accountid")
+  account   Account @relation("accountId", fields: [accountId], references: [primarykey])
+  roleId    String  @map("roleid")
+  role      ProjectRole @relation(fields: [roleId], references: [primarykey])
+  assignedAt    DateTime @default(now()) @map("assignedat")
+  assignedById  String?  @map("assignedbyid")
+  assignedBy    Account? @relation("assignedById", fields: [assignedById], references: [primarykey])
+  
+  @@unique([projectId, accountId])
+  @@map("projectmembers")
+}
+
+model Team {
+  primarykey          String    @id @default(uuid())
+  name        String
+  description String?
+  project  String // Привязка к проекту
+  projectRef    Project @relation(fields: [project], references: [primarykey])
+  createdAt   DateTime  @default(now()) @map("createat")
+  createdBy String?    @map("createby")
+  createdRef   Account?   @relation(fields: [createdBy], references: [primarykey])
+  
+  members     TeamMember[]
+
+  @@map("teams")
+}
+
+model TeamMember {
+  primarykey        String        @id @default(uuid())
+  teamId    String        @map("team")
+  team      Team          @relation(fields: [teamId], references: [primarykey])
+  accountId    String        @map("accountid")
+  account      Account       @relation("TeamMemberAccount", fields: [accountId], references: [primarykey])
+  role      String
+  joinedAt  DateTime      @default(now()) @map("joinedat")
+
+  @@map("teammembers")
+}
+
+model Project {
+  primarykey          String    @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime  @default(now()) @map("createdat")
+  startDate   DateTime  @default(now()) @map("startdate")
+  endDate     DateTime  @default(now()) @map("enddate")
+  createdBy String    @map("createby")
+  createdRef   Account   @relation(fields: [createdBy], references: [primarykey])
+  status      String?
+  logoUrl     String? @map("logourl")
+  
+  tasks       Task[]
+  teams       Team[]
+
+  @@map("projects")
+  ProjectMember ProjectMember[]
+  Milestone Milestone[]
+}
+
+model Task {
+  primarykey           String        @id @default(uuid())
+  number       Int
+  title        String
+  description  String?
+  type         String
+  color        String?
+  project    String        @map("projectid")
+  projectRef      Project       @relation(fields: [project], references: [primarykey])
+  createdBy  String        @map("createdby")
+  createdByRef    Account       @relation("taskAuthor", fields: [createdBy], references: [primarykey])
+  assignedTo String?       @map("assignedto")
+  assignedToRef   Account?      @relation("taskAssignee", fields: [assignedTo], references: [primarykey])
+  status       String
+  priority     String?
+  startDate       DateTime? @map("startdate")
+  endDate         DateTime? @map("enddate")
+  dueDate      DateTime?     @map("duedate")
+  stage        String?
+  createdAt    DateTime      @default(now()) @map("createdat")
+  updatedAt    DateTime      @default(now()) @updatedAt @map("updatedat")
+  milestoneId   String?    @map("milestoneid")
+  milestone     Milestone? @relation(fields: [milestoneId], references: [id])
+  
+  comments     TaskComment[]
+  attachments  TaskAttachment[]
+  tags         TaskTag[]
+
+  @@map("tasks")
+}
+
+model TaskComment {
+  primarykey        String    @id @default(uuid())
+  taskId    String    @map("taskid")
+  task      Task      @relation(fields: [taskId], references: [primarykey])
+  accountId String    @map("accountid")
+  account   Account   @relation(fields: [accountId], references: [primarykey])
+  comment   String
+  createdAt DateTime  @default(now()) @map("createdat")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updatedat")
+
+  @@map("taskcomments")
+  CommentAttachment CommentAttachment[]
+}
+
+model TaskAttachment {
+  primarykey          String    @id @default(uuid())
+  taskId      String    @map("taskid")
+  task        Task      @relation(fields: [taskId], references: [primarykey])
+  fileId      String    @map("fileid")
+  file        File      @relation(fields: [fileId], references: [primarykey])
+  uploadedBy String   @map("uploadedby")
+  uploadedRef  Account   @relation(fields: [uploadedBy], references: [primarykey])
+  uploadedAt  DateTime  @default(now()) @map("uploadedat")
+
+  @@map("taskattachments")
+}
+
+model CommentAttachment {
+  primarykey          String    @id @default(uuid())
+  commentId   String    @map("commentid")
+  comment     TaskComment @relation(fields: [commentId], references: [primarykey])
+  fileId      String    @map("fileid")
+  file        File      @relation(fields: [fileId], references: [primarykey])
+  uploadedById String   @map("uploadedby")
+  uploadedBy  Account   @relation("commentAttachment", fields: [uploadedById], references: [primarykey])
+  uploadedAt  DateTime  @default(now()) @map("uploadedat")
+  
+  @@map("commentattachments")
+}
+
+model Tag {
+  primarykey      String    @id @default(uuid())
+  name    String
+  color   String
+  
+  tasks   TaskTag[]
+
+  @@map("tags")
+}
+
+model TaskTag {
+  id      String  @id @default(uuid())
+  taskId  String  @map("task_id")
+  task    Task    @relation(fields: [taskId], references: [primarykey])
+  tagId   String  @map("tag_id")
+  tag     Tag     @relation(fields: [tagId], references: [primarykey])
+
+  @@unique([taskId, tagId])
+  @@map("tasktags")
+}
+
+model File {
+  primarykey String    @id @default(uuid())
+  filename    String
+  path        String
+  size        BigInt
+  mimeType    String    @map("mime_type")
+  uploadedById String   @map("uploaded_by")
+  uploadedBy  Account   @relation(fields: [uploadedById], references: [primarykey])
+  uploadedAt  DateTime  @default(now()) @map("uploaded_at")
+  isDeleted   Boolean   @default(false) @map("is_deleted")
+
+  @@map("files")
+  ChatAttachment ChatAttachment[]
+  TaskAttachment TaskAttachment[]
+  CommentAttachment CommentAttachment[]
+  Account Account[] @relation("userRef")
+  FileHierarchy FileHierarchy[]
+}
+
+model UserSettings {
+  primarykey              String    @id @default(uuid())
+  account          String    @unique @map("accountid")
+  accountRef            Account   @relation("accountRef", fields: [account], references: [primarykey])
+  theme           String
+  language        String
+  isNotifications Boolean   @default(true) @map("isnotifications")
+
+  @@map("usersettings")
+}
+
+model Chat {
+  primarykey           String    @id @default(uuid())
+  title        String
+  description  String?
+  photo        String?
+  account       String    @map("account")
+  accountRef         Account   @relation(fields: [account], references: [primarykey])
+  isPrivate Boolean @default(false) @map("isprivate")
+  
+  members      ChatMember[]
+  messages     ChatMessage[]
+
+  @@map("chat")
+}
+
+model ChatMember {
+  primarykey      String    @id @default(uuid())
+  chatId  String    @map("chat")
+  chat    Chat      @relation(fields: [chatId], references: [primarykey])
+  account  String    @map("account")
+  accountRef    Account   @relation(fields: [account], references: [primarykey])
+
+  @@map("chat_members")
+  @@unique([chatId, account])
+}
+
+model ChatMessage {
+  primarykey        String    @id @default(uuid())
+  chatId    String    @map("chat")
+  chat      Chat      @relation(fields: [chatId], references: [primarykey])
+  account    String    @map("account")
+  accountRef      Account   @relation(fields: [account], references: [primarykey])
+  content   String
+  isEdited  Boolean   @default(false) @map("isedited")
+  createdAt DateTime  @default(now()) @map("createat")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updateat")
+  
+  readStatus ReadMessage[]
+  attachments ChatAttachment[]
+
+  @@map("chat_messages")
+}
+
+model ChatAttachment {
+  primarykey          String    @id @default(uuid())
+  messageId   String    @map("message")
+  message     ChatMessage @relation(fields: [messageId], references: [primarykey])
+  fileId      String    @unique @map("fileid")
+  file        File      @relation(fields: [fileId], references: [primarykey])
+  fileName    String    @map("filename")
+  fileSize    Int       @map("filesize")
+  fileType    String    @map("filetype")
+  uploadedAt  DateTime  @default(now()) @map("uploadedat")
+
+  @@map("chat_attachments")
+}
+
+model ReadMessage {
+  message String      @map("message")
+  messageRef   ChatMessage @relation(fields: [message], references: [primarykey])
+  account    String      @map("account")
+  accountRef      Account     @relation("accountId", fields: [account], references: [primarykey])
+  isRead    Boolean     @default(false) @map("isread")
+
+  @@id([message, account])
+  @@map("read_message")
+}
+
+model Calendar {
+  primarykey    String    @id @default(uuid())
+  title         String
+  start   DateTime?  @default(now())
+  end     DateTime?
+  type    String
+  color   String
+  description String?
+  dueDate DateTime?  @map("duedate")
+  priority  String?
+  accountId     String     @map("accountid")
+  account       Account    @relation("calendar", fields: [accountId], references: [primarykey])
+
+
+  attendeesCalendar attendeesCalendar[]
+  @@map("calendar")
+}
+
+model attendeesCalendar {
+  primarykey    String    @id @default(uuid())
+  calendarId    String    @map("calendarid")
+  calendar      Calendar @relation(fields: [calendarId], references: [primarykey])
+  accountId     String    @map("accountid")
+  account       Account  @relation("attendeesCalendar", fields: [accountId], references: [primarykey])
+
+
+  @@map("attendeescalendar")
+}
+
+model AppLog {
+  primarykey             String    @id @default(uuid())
+  category       String
+  priority       Int
+  timestamp      DateTime
+  machineName    String    @map("machinename")
+  appDomainName  String    @map("appdomainname")
+  processId      String    @map("processid")
+  message        String
+
+  @@map("applogs")
+}
+
+model FileHierarchy {
+  primarykey String    @id @default(uuid())
+  name       String    // Имя элемента (обязательно)
+  type       FileType  @default(FILE) // Тип: FILE или FOLDER
+  s3Key      String    @map("s3_key") // Полный путь в S3 (генерируется автоматически)
+  parentId   String?   @map("parent_id") // Родительский элемент
+  parent     FileHierarchy? @relation("FileParent", fields: [parentId], references: [primarykey])
+  children   FileHierarchy[] @relation("FileParent")
+  fileId     String?   @map("file_id") // Связь с физическим файлом (только для type=FILE)
+  file       File?     @relation(fields: [fileId], references: [primarykey])
+  ownerId    String    @map("owner_id") // Владелец
+  owner      Account   @relation(fields: [ownerId], references: [primarykey])
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at")
+  isDeleted  Boolean   @default(false) @map("is_deleted") // Мягкое удаление
+
+  // Индексы
+  @@index([parentId])
+  @@index([s3Key])
+  @@index([ownerId])
+  @@map("file_hierarchy")
+  FileShare FileShare[]
+}
+
+enum FileType {
+  FILE
+  FOLDER
+}
+
+/// Добавляем модель Milestone для вех проекта
+model Milestone {
+  id           String   @id @default(uuid()) @map("primarykey")
+  projectId    String   @map("project_id")       // Связь с проектом
+  project      Project  @relation(fields: [projectId], references: [primarykey])
+
+  title        String   @map("title")            // Название вехи
+  description  String?  @map("description")      // Описание (необязательно)
+  date         DateTime @map("date")             // Дата начала
+  dateEnd       DateTime @map("dateend") 
+  status       String   @default("Planned") @map("status")
+
+  assigneeId   String?  @map("assignee_id")      // Ответственный (необязательно)
+  assignee     Account? @relation(fields: [assigneeId], references: [primarykey])
+
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt  @map("updated_at")
+
+  @@map("milestones")                              // Имя таблицы в базе
+  @@index([projectId], name: "idx_milestones_project")
+  @@index([date],      name: "idx_milestones_date")
+  Task Task[]
+}
+
+model FileShare {
+  id               String          @id @default(uuid()) @map("primarykey")
+  fileHierarchyId  String          @map("file_hierarchy_id")
+  fileHierarchy    FileHierarchy   @relation(fields: [fileHierarchyId], references: [primarykey])
+  accountId        String          @map("account_id")
+  account          Account         @relation(fields: [accountId], references: [primarykey])
+  permission       SharePermission @default(VIEW)      // Enum: VIEW, EDIT и т.п.
+  createdAt        DateTime        @default(now())      @map("created_at")
+
+  @@unique([fileHierarchyId, accountId], name: "uniq_file_share")
+  @@index([accountId], name: "idx_file_share_account")
+  @@index([fileHierarchyId], name: "idx_file_share_file")
+  @@map("file_shares")
+}
+
+enum SharePermission {
+  VIEW    // только просмотр
+  COMMENT // просмотр + комментирование
+  EDIT    // полный доступ
+}

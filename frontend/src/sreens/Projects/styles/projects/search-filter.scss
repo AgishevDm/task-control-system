@@ -1,0 +1,122 @@
+.search-filter-container {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+
+  .filters-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                  0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      z-index: 10;
+      width: 250px;
+      margin-top: 0.5rem;
+
+      .filter-group {
+        margin-bottom: 1rem;
+        
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 500;
+          color: #334155;
+        }
+        
+        select {
+          width: 100%;
+          padding: 0.5rem;
+          border: 1px solid #cbd5e1;
+          border-radius: 0.5rem;
+        }
+      }
+      
+      .reset-filters {
+        width: 100%;
+        padding: 0.5rem;
+        background: #f1f5f9;
+        border: none;
+        border-radius: 0.5rem;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.2s;
+        
+        &:hover {
+          background: #e2e8f0;
+        }
+      }
+    }
+
+  .search-input {
+    position: relative;
+    flex-grow: 1;
+
+    svg.search-icon {
+        width: 20px;
+        height: 20px;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 1rem;
+      padding-right: 1px !important;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      }
+    }
+
+    .search-icon {
+      width: 18px;
+      height: 18px;
+      right: 12px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+    }
+  }
+
+  .filter-button, .create-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+  }
+
+  .filter-button {
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    color: #64748b;
+
+    &:hover {
+      background: #f1f5f9;
+    }
+  }
+
+  .create-button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+
+    &:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+  }
+}

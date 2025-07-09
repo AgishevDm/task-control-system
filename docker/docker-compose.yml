@@ -1,0 +1,90 @@
+services:
+  redis:
+    container_name: redis
+    build:
+      context: ../redis
+      dockerfile: redis.Dockerfile
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data  # Сохраняем данные Redis на хосте
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf  # Подключаем конфигурацию
+    command: redis-server /usr/local/etc/redis/redis.conf  # Указываем конфигурационный файл
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    networks:
+      - app-network
+  backend:
+    container_name: backend
+    build:
+      context: ../backend
+      dockerfile: backend.Dockerfile
+    ports:
+      - "4132:4132"
+    volumes:
+      - ../backend:/app
+      - /app/node_modules # Изолируем node_modules
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - REDIS_HOST=redis # Внутри Docker
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  onlyoffice:
+    build:
+      context: ./docker
+      dockerfile: onlyoffice.Dockerfile
+    container_name: onlyoffice-docs
+    ports:
+      - "8082:80"
+    environment:
+      JWT_ENABLED: "true"
+      JWT_SECRET: "badgi-onlyoffice-super-secret"
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - app-network
+  # frontend:
+  #   container_name: frontend
+  #   build:
+  #     context: ../frontend
+  #     dockerfile: frontend.Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ../frontend:/app
+  #     # - /app/node_modules 
+  #   environment:
+  #     - NODE_ENV=development
+  #     - REACT_APP_API_URL=https://goal-path.ru/api
+  # admin:
+  #   container_name: admin
+  #   build:
+  #     context: ../admin
+  #     dockerfile: admin.Dockerfile
+  #   ports:
+  #     - "3001:3001"
+  #   volumes:
+  #     - ../admin:/app
+  #     # - /app/node_modules
+  #   environment:
+  #     - PORST=3001
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis_data:

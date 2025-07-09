@@ -1,0 +1,114 @@
+.calendar-body {
+    .week-view {  
+        .days-container {
+          grid-column: 2;
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          grid-template-rows: 40px 1fr;
+          overflow:auto;
+          height: 700px;
+          margin-left: -20px;
+          scrollbar-width: none;
+          border-right: 1px solid #eee;
+          margin-right: -20px;
+          margin-bottom: -20px;
+        }
+
+        .day-column {
+          position: relative;
+         // border-right: 1px solid #eee;
+      
+          &:last-child {
+            border-right: none;
+          }
+      
+          .day-header {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 50px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+            position: static;
+           // margin-bottom: 10px;
+            top: 0;
+            background: white;
+            z-index: 10;
+            
+            .day-name {
+              font-size: 0.9em;
+              color: #636e72;
+              line-height: 1.2;
+            }
+            
+            .day-number {
+              font-size: 1.2em;
+              font-weight: 500;
+              color: #2d3436;
+              margin-bottom: 10px;
+            }
+          }
+      
+          .events-container {
+            position: relative;
+            border-left: 1px solid #f0f0f0;
+            height: 700px;
+            padding-top: 10px;
+            padding-left: 10%;
+          }
+        }
+      }
+      
+      .time-slot {
+        height: 60px;
+        position: relative;
+        font-size: 0.9em;
+      
+        .time-label {
+          position: absolute;
+          top: -8px;
+          left: 5px;
+          color: #636e72;
+          background: white;
+          padding: 0 3px;
+        }
+      
+        .grid-line {
+          border-bottom: 1px solid #eee;
+          height: 1px;
+          width: calc(100% - 10px);
+          margin-left: 10px;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .week-view {
+          grid-template-columns: 40px 1fr;
+          height: auto;
+          min-height: 300px;
+          
+          .days-container {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(7, auto);
+            
+            .day-column {
+              border-right: none;
+              min-height: 150px;
+              
+              .day-header {
+                padding: 5px;
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 10px;
+                align-items: center;
+              }
+              
+              .events-container {
+                height: auto;
+                min-height: 100px;
+              }
+            }
+          }
+        }
+      }
+    }

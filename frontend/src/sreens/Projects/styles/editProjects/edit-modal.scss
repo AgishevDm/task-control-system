@@ -1,0 +1,867 @@
+$border-color: #e2e8f0;
+$primary-color: #4299e1;
+$text-color: #2d3748;
+
+.edit-modal {
+  position: relative;
+  z-index: 1000;
+
+  .hidden {
+    display: none;
+  }
+
+  &__content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    max-width: 900px;
+    width: 90%;
+    border-radius: 1rem;
+    padding: 2rem;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+
+  &__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  &__grid {
+    grid-template-columns: 1.5fr 1fr;
+    display: grid;
+    padding: 1rem;
+    gap: 2rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 1rem;
+  }
+
+  * {
+    box-sizing: border-box;
+    max-width: 100%; // Запрещаем превышение ширины
+  }
+
+  &__left-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  &__header-section {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  &__title-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__title-input {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #4299e1;
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+    }
+  }
+
+  .date-fields {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin: 1rem 0;
+
+        input[type="date"] {
+            padding: 0.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+        }
+    }
+
+  &__status-select {
+    padding: 0.5rem 2rem;
+    border: px solid #e2e8f0;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    width: fit-content;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.2em;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  &__logo-upload {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: 2px solid $border-color;
+    }
+  }
+
+  &__logo-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 0.9rem;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.9);
+    }
+
+    input {
+      display: none;
+    }
+  }
+
+  &__logo-actions {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    gap: 5px;
+  }
+
+  &__clear-button {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+
+    &:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid $border-color;
+  }
+
+  &__description-section {
+    flex: 1;
+  }
+
+  &__description-textarea {
+    min-height: 150px;
+    max-height: 300px;
+    padding: 1rem;
+    border: 2px solid $border-color;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: vertical;
+    width: 100%;
+    background: #fff;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+    }
+  }
+
+  &__right-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__members-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  &__member-avatar {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #e2e8f0;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__member-input {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+  }
+
+  &__add-button {
+    padding: 0.8rem 1.5rem;
+    background: #4299e1;
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:disabled {
+      background: #cbd5e0;
+      cursor: not-allowed;
+    }
+
+    &:hover:not(:disabled) {
+      background: #3182ce;
+    }
+  }
+
+  &__members-list {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  &__member-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: white;
+    border: 2px solid #f1f5f9;
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: #e2e8f0;
+      transform: translateY(-1px);
+    }
+  }
+
+  .member-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-grow: 1;
+    
+    .member-name-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      flex-grow: 1;
+    }
+    
+    span {
+      margin-right: 1rem;
+    }
+    
+    .role-select {
+      padding: 0.5rem 2rem 0.5rem 1rem;
+      border: 2px solid $border-color;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        border-color: darken($border-color, 10%);
+      }
+    }
+  }
+
+  // &__member-avatar {
+  //   width: 2.5rem;
+  //   height: 2.5rem;
+  //   border-radius: 50%;
+  //   background: #f1f5f9;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  //   overflow: hidden;
+  // }
+
+  &__avatar-text {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #4a5568;
+  }
+
+  &__member-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2d3748;
+  }
+
+  &__member-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .role-select {
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.5rem;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1em;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #4299e1;
+    }
+  }
+
+  &__delete-button {
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background: #fee2e2;
+    color: #dc2626;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #fecaca;
+    }
+  }
+
+  &__cancel-button {
+    padding: 0.8rem 1.5rem;
+    background: #f1f5f9;
+    color: $text-color;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #e2e8f0;
+    }
+  }
+
+  &__save-button {
+    padding: 0.8rem 1.5rem;
+    background: $primary-color;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background: darken($primary-color, 10%);
+    }
+  }
+
+// Стили для секции команд
+.edit-modal__team-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+
+  .team-creator {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .edit-modal__team-input {
+      flex: 1;
+      padding: 0.8rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 0.5rem;
+    }
+
+    .edit-modal__add-team-button {
+      padding: 0.8rem 1.5rem;
+      background: #48bb78;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #38a169;
+      }
+    }
+  }
+
+  .teams-list {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .team-card {
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    background: white;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .team-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      .team-name {
+        margin: 0;
+        font-size: 1.1rem;
+      }
+
+      .team-manage-button {
+        background: #4299e1;
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        font-size: 0.9rem;
+      }
+    }
+
+    .team-members {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+
+      .team-member {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        background: #f8fafc;
+        border-radius: 6px;
+
+        .member-name {
+          font-size: 0.9rem;
+        }
+
+        .member-role {
+          font-size: 0.8rem;
+          color: #718096;
+        }
+      }
+    }
+  }
+}
+
+// Стили для модального окна управления участниками
+.team-members-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  .modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 600px;
+    max-width: 95%;
+    max-height: 80vh;
+    overflow-y: auto;
+
+    .team-name-edit {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      transition: all 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: #4299e1;
+        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+      }
+    }
+
+    .current-members {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 8px;
+
+      .member-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        margin: 0.5rem 0;
+        background: white;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+        .member-info {
+          gap: 0.75rem;
+          
+          span {
+            min-width: 120px;
+          }
+        }
+      }
+    }
+
+    .member-item button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.2s;
+
+      // Для кнопки добавления
+      &.add-button {
+        background: #48bb78;
+        color: white;
+
+        &:hover {
+          background: #38a169;
+        }
+
+        &:disabled {
+          background: #c6f6d5;
+          cursor: not-allowed;
+        }
+      }
+
+      // Для кнопки удаления
+      &.remove-button {
+        background: #fed7d7;
+        color: #c53030;
+
+        &:hover {
+          background: #feb2b2;
+          cursor: pointer;
+        }
+      }
+    }
+
+    h3 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    .available-members {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      max-height: 300px;
+      overflow-y: auto;
+      margin: 1rem 0;
+
+      .member-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 0.5rem;
+        background: #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+        button {
+          padding: 0.4rem 0.8rem;
+          background: #48bb78;
+          color: white;
+          border: none;
+          border-radius: 0.3rem;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .add-button {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .close-button {
+      width: 100%;
+      padding: 0.8rem;
+      background: #4299e1;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+  }
+}
+
+.members-management {
+  .search-section {
+    margin-bottom: 1.5rem;
+
+    .search-input-container {
+      position: relative;
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+
+      input {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: 2px solid $border-color;
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        transition: all 0.2s;
+        padding-right: 100px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239299a6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cpath d='M21 21l-4.35-4.35'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1.2em;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+        }
+      }
+
+      button {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        padding: 0 1.5rem;
+        border: none;
+        border-radius: 0 0.75rem 0.75rem 0;
+        background: $primary-color;
+        color: white;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+          background: darken($primary-color, 10%);
+        }
+
+        &:disabled {
+          background: #cbd5e0;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  .search-results {
+    border: 2px solid $border-color;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin-top: 0.5rem;
+
+    .user-result {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #f8fafc;
+      }
+
+      .user-avatar {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid $border-color;
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+
+        .user-login {
+          font-weight: 500;
+          color: $text-color;
+        }
+
+        .user-name {
+          font-size: 0.9rem;
+          color: #718096;
+        }
+      }
+    }
+  }
+}
+
+.no-results-message {
+  padding: 1rem;
+  text-align: center;
+  color: #718096;
+  font-size: 0.9rem;
+  border: 1px dashed #e2e8f0;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.member-item {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s;
+  
+  &:hover {
+    transform: translateX(2px);
+  }
+
+  .remove-button {
+    background: #fed7d7;
+
+    &:hover {
+      background: #feb2b2;
+      cursor: pointer;
+    }
+  }
+}
+
+  @media (max-width: 768px) {
+    &__content {
+      padding: 1rem;
+    }
+
+    &__grid {
+      grid-template-columns: 1fr;
+      max-height: 80vh;
+    }
+
+    &__logo-upload {
+      width: 80px;
+      height: 80px;
+    }
+
+    &__right-block {
+      order: -1;
+    }
+
+    &__header-section {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &__title-input {
+      font-size: 1.2rem;
+    }
+
+    &__member-controls {
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .team-members-modal {
+        .modal-content {
+        padding: 1rem;
+
+        .member-item {
+            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+
+            select {
+              width: 100%;
+            }
+
+            button {
+            width: 100%;
+            margin-top: 8px;
+            }
+        }
+        }
+    }
+
+    .edit-modal__team-section {
+        .team-creator {
+        flex-direction: column;
+        
+        .edit-modal__add-team-button {
+            width: 100%;
+            text-align: center;
+        }
+        }
+    }
+  }
+}

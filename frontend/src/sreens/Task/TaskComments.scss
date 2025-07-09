@@ -1,0 +1,464 @@
+.task-comments-container {
+    margin-top: 30px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    padding: 20px;
+    max-height: 800px;
+    height: 70vh;
+  .assignee-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 5px;
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #6366f1;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+  }
+
+  .file-item {
+      position: relative;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      background: #f9f9f9;
+      max-width: 80%;
+      
+      &:hover {
+        border-color: #c0c0c0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      // Общие стили для превью
+      .preview {
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f5;
+        position: relative;
+        overflow: hidden;
+
+        img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+          border-radius: 4px 4px 0 0;
+        }
+
+        .file-icon {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          color: #666;
+
+          svg {
+            margin-bottom: 4px;
+          }
+
+          span {
+            font-size: 10px;
+            text-transform: uppercase;
+          }
+        }
+      }
+
+      // Стили для информации о файле
+      .info {
+        padding: 8px;
+        font-size: 12px;
+
+        .name {
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-weight: 500;
+          color: #333;
+        }
+
+        .size {
+          color: #666;
+          margin-top: 2px;
+        }
+
+        progress {
+          width: 100%;
+          height: 4px;
+          margin-top: 6px;
+          border-radius: 2px;
+          appearance: none;
+
+          &::-webkit-progress-bar {
+            background-color: #e0e0e0;
+            border-radius: 2px;
+          }
+
+          &::-webkit-progress-value {
+            background-color: #3366cc;
+            border-radius: 2px;
+          }
+        }
+
+        .error {
+          color: #e53935;
+          font-size: 11px;
+          margin-top: 4px;
+        }
+      }
+
+      // Стили для кнопки удаления
+      .remove {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(0, 0, 0, 0.6);
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        opacity: 0;
+        transition: opacity 0.2s;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.8);
+        }
+      }
+
+      &:hover .remove {
+        opacity: 1;
+      }
+
+      // Специфичные стили для загружаемых файлов
+      &.uploading {
+        .preview {
+          background: #f0f7ff;
+        }
+      }
+
+      // Стили для ошибок загрузки
+      &.error {
+        border-color: #ffcdd2;
+        background: #ffebee;
+
+        .preview {
+          background: #ffebee;
+        }
+      }
+    }
+
+    // Стили для ссылок на прикрепленные файлы
+    a {
+      text-decoration: none;
+      color: inherit;
+
+      &:hover {
+        .file-item {
+          border-color: #3366cc;
+          background: #f0f7ff;
+        }
+      }
+    }
+
+    .files-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+
+      .file-item {
+        position: relative;
+        border-radius: 6px;
+        overflow: hidden;
+        
+        img {
+          width: 100%;
+          height: 120px;
+          object-fit: cover;
+          border-radius: 4px;
+          transition: transform 0.2s;
+          
+          &:hover {
+            transform: scale(1.03);
+          }
+        }
+        
+        .file-info {
+          padding: 8px;
+          font-size: 12px;
+          
+          .name {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          
+          .size {
+            color: #666;
+          }
+        }
+      }
+    }
+  
+    .comments-title {
+      margin: 0 0 20px 0;
+      font-size: 18px;
+      color: #333;
+      font-weight: 600;
+    }
+  
+    .comments-list {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    padding-right: 8px;
+
+
+  
+      .comment-item {
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+        //overflow: hidden;
+        z-index: 100;
+  
+        &:last-child {
+          border-bottom: none;
+        }
+  
+        .comment-header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 8px;
+          position: relative;
+  
+          .comment-author {
+            font-weight: 600;
+            color: #333;
+            margin-right: 15px;
+          }
+  
+          .comment-date {
+            font-size: 12px;
+            color: #666;
+          }
+  
+          .edited-label {
+            margin-left: 10px;
+            font-size: 11px;
+            color: #999;
+          }
+  
+          .comment-menu {
+            margin-left: auto;
+            position: relative;
+  
+            .menu-button {
+              background: none;
+              border: none;
+              cursor: pointer;
+              color: #666;
+              padding: 4px;
+              border-radius: 4px;
+  
+              &:hover {
+                background: #f5f5f5;
+              }
+            }
+  
+            .menu-content {
+              position: absolute;
+              right: 20px;
+              top: 20px;
+              background: white;
+              border-radius: 6px;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+              z-index: 1000;
+              min-width: 160px;
+              padding: 8px 0;
+  
+              button {
+                width: 100%;
+                padding: 8px 16px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background: none;
+                border: none;
+                text-align: left;
+                cursor: pointer;
+                font-size: 14px;
+                color: #333;
+  
+                &:hover {
+                  background: #f5f5f5;
+                }
+              }
+            }
+          }
+        }
+  
+        .comment-text {
+          margin-bottom: 10px;
+          white-space: pre-wrap;
+          line-height: 1.5;
+          max-height: 200px;
+          overflow-y: auto;
+        }
+  
+        .comment-files {
+          margin-top: 10px;
+  
+          .file-item {
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            padding: 5px 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            font-size: 13px;
+  
+            a {
+              color: #3366cc;
+              text-decoration: none;
+  
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+    }
+  
+    .comment-editor {
+      flex: 0 0 auto;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 10px;
+      background: white;
+      margin-top: auto;
+  
+      &.dragging {
+        border-color: #3366cc;
+        background: #f0f7ff;
+      }
+  
+      .editor-toolbar {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10px;
+  
+        .toolbar-button {
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: #666;
+          padding: 4px;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+  
+          &:hover {
+            background: #f5f5f5;
+            color: #333;
+          }
+        }
+      }
+  
+      .comment-input {
+        width: calc(100% - 22px);
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 10px;
+        font-family: inherit;
+        font-size: 14px;
+        resize: vertical;
+        min-height: 80px;
+        margin-bottom: 10px;
+  
+        &:focus {
+          outline: none;
+          border-color: #3366cc;
+          box-shadow: 0 0 0 2px rgba(51, 102, 204, 0.2);
+        }
+      }
+  
+      .attached-files {
+        margin-bottom: 10px;
+  
+        .file-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 6px 10px;
+          background: #f5f5f5;
+          border-radius: 4px;
+          margin-bottom: 5px;
+          font-size: 13px;
+  
+          .remove-file {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            font-size: 16px;
+            padding: 0 4px;
+  
+            &:hover {
+              color: #ff3333;
+            }
+          }
+        }
+      }
+  
+      .editor-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+  
+        .drag-hint {
+          font-size: 12px;
+          color: #666;
+          opacity: 0.7;
+        }
+  
+        .send-button {
+          background: #3366cc;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          padding: 8px 16px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-weight: 500;
+  
+          &:hover {
+            background: #2a5cb3;
+          }
+  
+          &:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }

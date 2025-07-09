@@ -1,0 +1,128 @@
+.confirm-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f0f2f5 0%, #dfe3e8 100%);
+    padding: 2rem;
+  
+    .back-btn {
+      position: absolute;
+      top: 335px;
+      left: calc(50% - 360px + 20px);
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.3s ease;
+  
+      &:hover {
+        background: rgba(255, 255, 255, 1);
+        svg { color: #2d3436; }
+      }
+  
+      svg {
+        color: #636e72;
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+      }
+    }
+  
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.98);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px rgba(84, 84, 88, 0.37);
+  
+      h2 {
+        color: #2d3436;
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+  
+      .step-info {
+        text-align: center;
+        color: #636e72;
+        font-size: 0.9rem;
+      }
+  
+      .status-message {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+  
+        &.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+  
+        &.error { color: #ff4757; }
+        &.success { color: #2ed573; }
+      }
+  
+      .code-inputs {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-bottom: 2rem;
+  
+        input {
+          width: 50px;
+          height: 60px;
+          text-align: center;
+          font-size: 1.5rem;
+          border: 2px solid #e0e0e0;
+          border-radius: 0.8rem;
+          transition: all 0.3s ease;
+  
+          &.error { border-color: #ff4757; }
+          &.valid { border-color: #2ed573; }
+  
+          &:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(116, 125, 140, 0.1);
+          }
+        }
+      }
+  
+      .button-group {
+        display: flex;
+        justify-content: center;
+  
+        .btn {
+          padding: 1rem 2rem;
+          border: none;
+          border-radius: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+  
+          &.complete {
+            background: #636e72;
+            color: white;
+  
+            &:hover { background: #2d3436; }
+            &.valid {
+              background: #2ed573;
+              &:hover { background: #26af5f; }
+            }
+          }
+        }
+      }
+    }
+  }

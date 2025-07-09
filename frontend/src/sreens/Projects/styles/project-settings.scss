@@ -1,0 +1,450 @@
+
+$primary-color: #3b82f6;
+$secondary-color: #64748b;
+$success-color: #22c55e;
+$error-color: #ef4444;
+$background-color: #f8fafc;
+$border-color: #e2e8f0;
+$text-color: #1e293b;
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+.project-settings-modal {
+  position: relative;
+  z-index: 50;
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 90vh;
+    border-radius: 1rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: $shadow-md;
+
+    .modal-header {
+      padding: 1.5rem;
+      background: $background-color;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid $border-color;
+
+      h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: $text-color;
+        margin: 0;
+      }
+
+      .close-button {
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        color: $secondary-color;
+        &:hover {
+          color: $primary-color;
+        }
+      }
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex-grow: 1;
+
+      .settings-section {
+        margin-bottom: 2rem;
+
+        h3 {
+          font-size: 1.25rem;
+          color: $text-color;
+          margin-bottom: 1rem;
+          padding-bottom: 0.5rem;
+          border-bottom: 2px solid $border-color;
+        }
+      }
+
+      .logo-upload {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        margin-bottom: 1.5rem;
+
+        .project-logo {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 0.75rem;
+          border: 2px dashed $border-color;
+        }
+
+        .upload-label {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba($primary-color, 0.8);
+          color: white;
+          text-align: center;
+          padding: 0.5rem;
+          cursor: pointer;
+          transition: background 0.2s;
+
+          &:hover {
+            background: rgba($primary-color, 0.9);
+          }
+
+          input[type="file"] {
+            display: none;
+          }
+        }
+
+        .logo-actions {
+          position: absolute;
+          top: 0.5rem;
+          right: 0.5rem;
+
+          .clear-button {
+            background: rgba(white, 0.9);
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: $shadow-md;
+            &:hover {
+              background: white;
+            }
+          }
+        }
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          color: $secondary-color;
+          font-weight: 500;
+        }
+
+        input, select, textarea {
+          width: 100%;
+          padding: 0.75rem;
+          border: 2px solid $border-color;
+          border-radius: 0.5rem;
+          font-size: 1rem;
+          transition: border-color 0.2s;
+
+          &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+          }
+        }
+
+        .date-inputs {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          input[type="date"] {
+            flex: 1;
+          }
+        }
+
+        textarea {
+          min-height: 100px;
+          resize: vertical;
+        }
+      }
+
+      .team-creator {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+
+        input {
+          flex: 1;
+        }
+
+        button {
+          background: $primary-color;
+          color: white;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 0.5rem;
+          cursor: pointer;
+          &:hover {
+            background: darken($primary-color, 5%);
+          }
+        }
+      }
+
+      .teams-list {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+        .team-card {
+          border: 2px solid $border-color;
+          border-radius: 0.75rem;
+          padding: 1rem;
+
+          .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+
+            h4 {
+              margin: 0;
+              font-size: 1.1rem;
+            }
+
+            button {
+              background: $background-color;
+              border: 2px solid $border-color;
+              padding: 0.25rem 0.75rem;
+              border-radius: 0.5rem;
+              cursor: pointer;
+              &:hover {
+                background: darken($background-color, 2%);
+              }
+            }
+          }
+
+          .team-members {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+
+            .member-item {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 0.25rem 0;
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+
+      .members-management {
+        .search-section {
+          display: flex;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+
+          input {
+            flex: 1;
+          }
+
+          select {
+            min-width: 150px;
+          }
+        }
+
+        .search-results {
+          border: 2px solid $border-color;
+          border-radius: 0.5rem;
+          margin-bottom: 1rem;
+          max-height: 200px;
+          overflow-y: auto;
+
+          .user-result {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s;
+
+            &:hover {
+              background: $background-color;
+            }
+
+            img {
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              object-fit: cover;
+            }
+          }
+        }
+
+        .current-members {
+          border: 2px solid $border-color;
+          border-radius: 0.5rem;
+          padding: 0.5rem;
+
+          .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid $border-color;
+
+            &:last-child {
+              border-bottom: none;
+            }
+
+            .member-info {
+              display: flex;
+              align-items: center;
+              gap: 1rem;
+
+              img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+              }
+
+              select {
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+              }
+            }
+
+            button {
+              background: rgba($error-color, 0.1);
+              border: none;
+              color: $error-color;
+              padding: 0.25rem 0.5rem;
+              border-radius: 0.25rem;
+              cursor: pointer;
+              &:hover {
+                background: rgba($error-color, 0.2);
+              }
+            }
+          }
+        }
+      }
+
+      .team-management-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .modal-content {
+          background: white;
+          padding: 2rem;
+          border-radius: 1rem;
+          width: 90%;
+          max-width: 800px;
+          max-height: 80vh;
+          overflow-y: auto;
+
+          .members-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 1rem 0;
+
+            .available-members, .current-members {
+              border: 2px solid $border-color;
+              border-radius: 0.5rem;
+              padding: 1rem;
+
+              .member-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem;
+                margin: 0.25rem 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .modal-footer {
+      padding: 1.5rem;
+      background: $background-color;
+      border-top: 2px solid $border-color;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+
+      button {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: 500;
+
+        &:first-child {
+          background: $background-color;
+          color: $secondary-color;
+          &:hover {
+            background: darken($background-color, 2%);
+          }
+        }
+
+        &:last-child {
+          background: $primary-color;
+          color: white;
+          &:hover {
+            background: darken($primary-color, 5%);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .project-settings-modal {
+    .modal-content {
+      width: 95%;
+      max-width: none;
+      height: 95vh;
+
+      .modal-body {
+        .teams-list {
+          grid-template-columns: 1fr;
+        }
+
+        .members-management {
+          .search-section {
+            flex-direction: column;
+          }
+
+          .search-results {
+            max-height: 150px;
+          }
+        }
+
+        .team-management-modal .modal-content .members-section {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}

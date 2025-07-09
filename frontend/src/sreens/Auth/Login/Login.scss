@@ -1,0 +1,219 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+  .auth-container {
+    display: flex;
+    width: 800px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px rgba(84, 84, 88, 0.37);
+    overflow: hidden;
+
+    .form-section {
+      flex: 1;
+      padding: 4rem 2rem;
+      position: relative;
+
+      h2 {
+        color: #2c3e50;
+        margin-bottom: 3rem;
+        text-align: center;
+      }
+
+      .input-field {
+        margin-bottom: 2rem;
+        position: relative;
+
+        label {
+          position: absolute;
+          top: -10px;
+          left: 12px;
+          background: white;
+          padding: 0 5px;
+          font-size: 0.9rem;
+          color: #2c3e50;
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .input-wrapper {
+          position: relative;
+          border: 2px solid #dfe6e9;
+          border-radius: 0.5rem;
+          padding: 1px;
+
+          input {
+            width: 80%;
+            padding: 1rem;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+
+            &:focus {
+              outline: none;
+            }
+          }
+
+          .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #636e72;
+          }
+        }
+
+        &:focus-within {
+          .input-wrapper {
+            border-color: rgba(45, 52, 54, 0.3);
+            box-shadow: 0 0 0 3px rgba(116, 185, 255, 0.1);
+          }
+
+          label {
+            color: rgba(45, 52, 54, 0.7);
+            
+          }
+        }
+      }
+
+      .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 1rem 0 2rem;
+        color: #2c3e50;
+        justify-content: flex-start;
+
+        input {
+          margin: 0;
+        }
+      }
+
+      .auth-button {
+        width: 100%;
+        padding: 1rem;
+        border: none;
+        border-radius: 0.5rem;
+        background: #636e72;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: #2d3436;
+        }
+      }
+
+      .register-link {
+        text-align: center;
+        color: #636e72;
+        cursor: pointer;
+        font-size: 0.9rem;
+
+        &:hover {
+          color: #2d3436;
+          text-decoration: underline;
+        }
+      }
+
+      .error-message {
+        color: #ff4757;
+        text-align: center;
+        font-size: 0.9rem;
+        position: absolute;
+        width: 100%;
+        top: 23%;
+        left: 0;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        
+        &.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    }
+
+    .graphic-section {
+      flex: 1;
+      background: linear-gradient(
+        155deg,
+        rgba(59, 63, 65, 0.8),
+        rgba(45, 52, 54, 0.9),
+        rgba(0, 0, 0, 0.7)
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      background-size: 100% 100%;
+      animation: fluidFlow 18s ease infinite;
+      position: relative;
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.15) 0%,
+          transparent 60%
+        );
+        animation: softGlow 25s ease-in-out infinite;
+        filter: blur(30px);
+      }
+
+      @keyframes fluidFlow {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes softGlow {
+        0%, 100% {
+          transform: translate(-30%, -30%) rotate(0deg);
+        }
+        50% {
+          transform: translate(30%, 30%) rotate(180deg);
+        }
+      }
+    }
+  }
+}
+
+.auth-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.forgot-password-link {
+  text-align: center;
+  color: #636e72;
+  cursor: pointer;
+  font-size: 0.9rem;
+  
+  &:hover {
+    color: #2d3436;
+    text-decoration: underline;
+  }
+}

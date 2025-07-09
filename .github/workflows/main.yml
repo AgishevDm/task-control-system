@@ -1,0 +1,124 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: ['**']
+    tags: ['*'] 
+
+jobs:
+  check_node_version:
+    runs-on: ubuntu-latest
+    container: node:20.18.0-alpine
+    steps:
+      - name: Check Node.js version
+        run: |
+          echo "Running on Node.js version:"
+          node -v
+
+  lint_frontend:
+    needs: check_node_version
+    runs-on: ubuntu-latest
+    container: node:20.18.0-alpine
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm install --no-progress
+      - name: Run lint
+        working-directory: ./frontend
+        run: npm run lint
+      # - name: Run unit tests
+      #   working-directory: ./frontend
+      #   run: npm test
+
+  # lint_admin:
+  #   needs: check_node_version
+  #   runs-on: ubuntu-latest
+  #   container: node:20.18.0-alpine
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Install dependencies
+  #       working-directory: ./admin
+  #       run: npm install --no-progress
+  #     - name: Run lint
+  #       working-directory: ./admin
+  #       run: npm run lint
+  #     - name: Run unit tests
+  #       working-directory: ./admin
+  #       run: npm test
+
+  lint_backend:
+    needs: check_node_version
+    runs-on: ubuntu-latest
+    container: node:20.18.0-alpine
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm install --no-progress
+      - name: Run lint
+        working-directory: ./backend
+        run: npm run lint
+      # - name: Run unit tests
+      #   working-directory: ./backend
+      #   run: npm test
+
+  build_backend:
+    needs: [lint_backend]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Build and push backend image
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/badgi-backend:$TAG -f backend/backend.Dockerfile backend/
+          docker inspect ${{ secrets.DOCKER_USERNAME }}/badgi-backend:$TAG --format='{{.Size}}'
+          docker push ${{ secrets.DOCKER_USERNAME }}/badgi-backend:$TAG
+
+  build_frontend:
+    needs: [lint_frontend]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Build and push frontend image
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/badgi-frontend:$TAG -f frontend/frontend.Dockerfile frontend/
+          docker inspect ${{ secrets.DOCKER_USERNAME }}/badgi-frontend:$TAG --format='{{.Size}}'
+          docker push ${{ secrets.DOCKER_USERNAME }}/badgi-frontend:$TAG
+
+  # build_admin:
+  #   needs: [lint_admin]
+  #   runs-on: ubuntu-latest
+  #   if: startsWith(github.ref, 'refs/tags/')
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Login to Docker Hub
+  #       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+  #     - name: Build and push admin image
+  #       run: |
+  #         TAG=${GITHUB_REF#refs/tags/}
+  #         docker build -t ${{ secrets.DOCKER_USERNAME }}/badgi-admin:$TAG -f admin/admin.Dockerfile admin/
+  #         docker push ${{ secrets.DOCKER_USERNAME }}/badgi-admin:$TAG``
+
+  deploy:
+    needs: [build_backend, build_frontend]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+      - name: SSH and deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/badgi
+            sudo ./deploy.sh ${{ github.ref_name }}

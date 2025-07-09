@@ -1,0 +1,31 @@
+.admin-page {
+  margin-left: 240px;
+  padding: 30px;
+  min-height: 100vh;
+  background: #f8f9fa;
+
+  .page-header {
+    font-size: 24px;
+    color: #2c3e50;
+    margin-bottom: 30px;
+  }
+
+  .content-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+}
+
+.sidebar.collapsed + .admin-page {
+  margin-left: 60px;
+}
+
+@media (max-width: 768px) {
+  .admin-page {
+    margin-left: 0;
+    padding: 20px;
+    padding-bottom: 80px;
+  }
+}

@@ -1,0 +1,173 @@
+$sidebar-bg: #1A2B3C;       
+$active-color: #4FD1C5;    
+$text-color: #ecf0f1;      
+
+
+//  Основные стили сайдбара 
+.sidebar {
+  width: 240px;             
+  height: 100vh;            
+  background: $sidebar-bg;
+  position: fixed;          
+  transition: width 0.3s ease; 
+  display: flex;
+  flex-direction: column;   
+  color: $text-color;
+  z-index: 1000;            
+
+  // Стили для свернутого состояния 
+  &.collapsed {
+    width: 60px;            
+
+    
+    .nav-text,
+    .logout-btn span {
+      display: none;
+    }
+
+    // Позиционирование кнопки свернуть/развернуть
+    .toggle-btn {
+      left: 45px;           
+    }
+
+    // Настройки контейнера навигации
+    .nav {
+      padding: 80px 0 20px; 
+    }
+
+    // Стили элементов меню
+    .nav-item {
+      justify-content: center; 
+      padding: 12px 0 !important; 
+      margin: 4px 0 !important;  
+      width: 100%;           
+    }
+
+    // Корректировка позиции иконок
+    .nav-icon {
+      margin-right: 0;       
+      transform: translateX(2px); 
+    }
+  }
+}
+
+
+// Кнопка сворачивания   
+.toggle-btn {
+  position: absolute;
+  top: 20px;              
+  left: 220px;             
+  background: $sidebar-bg;
+  border: 2px solid $text-color;
+  color: $text-color;
+  border-radius: 50%;       
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease; 
+  z-index: 1001;           
+
+  // Эффект при наведении
+  &:hover {
+    background: $active-color;
+    transform: rotate(180deg); 
+  }
+}
+
+
+// Контейнер навигации
+.nav {
+  flex: 1;                  
+  padding: 80px 16px 20px;  
+  display: flex;
+  flex-direction: column;  
+}
+
+// Элементы меню  
+.nav-item {
+  display: flex;
+  align-items: center;      
+  padding: 12px 16px;      
+  margin: 4px 8px;         
+  border-radius: 4px;      
+  color: $text-color;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box; 
+
+  // Эффект при наведении
+  &:hover {
+    background: rgba(255,255,255,0.1); 
+  }
+
+  // Стиль активной страницы
+  &.active {
+    background: $active-color;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+  }
+}
+
+
+//  Иконки меню    
+.nav-icon {
+  font-size: 20px;         
+  margin-right: 15px;       
+  flex-shrink: 0;           
+}
+
+
+//  Текст элементов меню 
+.nav-text {
+  font-size: 14px;
+  font-weight: 500;         
+  white-space: nowrap;      
+}
+
+//  Кнопка выхода 
+.logout-btn {
+  position: absolute;
+  bottom: 20px;             
+  left: 50%;               
+  transform: translateX(-50%); 
+  width: calc(100% - 40px); 
+  padding: 12px;
+  background: darken($sidebar-bg, 10%);
+  border: none;
+  border-radius: 4px;
+  color: $text-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;                
+  cursor: pointer;
+  transition: all 0.3s;     
+
+  // Стиль иконки
+  .icon {
+    font-size: 18px;
+    flex-shrink: 0;         
+  }
+
+  // Свернутое состояние
+  .sidebar.collapsed & {
+    width: 40px;            
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;    
+    
+    // Скрытие текста
+    span {
+      display: none;
+    }
+  }
+
+  // Эффект при наведении
+  &:hover {
+    background: $active-color;
+    transform: translateX(-50%) scale(1.05);
+  }
+}

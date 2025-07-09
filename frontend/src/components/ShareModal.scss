@@ -1,0 +1,130 @@
+/* Весь затемнённый фон модалки */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;         // поверх всего
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Сам контейнер модалки */
+.modal.share-modal {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1001;         // чуть выше backdrop
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.modal.share-modal h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+/* Отдельные поля ввода */
+.modal.share-modal .field {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+  }
+
+  select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Кнопки Применить / Отмена */
+.modal.share-modal .buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+
+  button {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &.cancel {
+      background: #f3f3f3;
+      color: #555;
+
+      &:hover:not(:disabled) {
+        background: #e0e0e0;
+      }
+    }
+
+    &:not(.cancel) {
+      background: #4f46e5;
+      color: white;
+
+      &:hover:not(:disabled) {
+        background: #3c367f;
+      }
+    }
+  }
+}
+
+/* Список уже расшаренных */
+.modal.share-modal .shares-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+    color: #333;
+
+    button {
+      background: transparent;
+      border: none;
+      color: #e53e3e;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: background 0.2s;
+
+      &:hover {
+        background: rgba(229, 62, 62, 0.1);
+      }
+    }
+  }
+
+  li:last-child {
+    border-bottom: none;
+  }
+}

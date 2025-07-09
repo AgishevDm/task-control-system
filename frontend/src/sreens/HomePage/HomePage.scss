@@ -1,0 +1,17 @@
+.homepage-container {
+    display: flex;
+    min-height: 100vh;
+  
+    .content {
+      flex-grow: 1;
+      padding: 2rem;
+      background: #f8f9fa;
+      
+      h1 {
+        color: #2d3436;
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        
+      }
+    }
+  }

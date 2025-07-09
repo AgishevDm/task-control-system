@@ -1,0 +1,207 @@
+.email-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 2rem;
+    position: relative;
+  
+    .close-btn {
+      position: absolute;
+      top: 273px;
+      left: calc(50% - 470px + 20px);
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.3s ease;
+  
+      &:hover {
+        background: rgba(255, 255, 255, 1);
+        
+        svg {
+          color: #ff4757;
+        }
+      }
+  
+      svg {
+        color: #2c3e50;
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+      }
+    }
+  
+    .auth-container {
+      display: flex;
+      width: 800px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(84, 84, 88, 0.37);
+      overflow: hidden;
+      position: relative;
+  
+      .graphic-section {
+        flex: 1;
+        background: rgba(45, 52, 54, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        text-align: center;
+        color: white;
+        font-size: 1.5rem;
+        line-height: 1.4;
+      }
+  
+      .form-section {
+        flex: 1;
+        padding: 4rem 32px;
+        position: relative;
+  
+        h2 {
+          color: #2c3e50;
+          margin-bottom: 1rem;
+          text-align: center;
+          font-size: 2rem;
+        }
+  
+        .step-info {
+          text-align: center;
+          color: #636e72;
+          margin-bottom: 2.5rem;
+          font-size: 0.9rem;
+        }
+  
+        .input-group {
+          margin-bottom: 1rem;
+  
+          .input-field {
+            position: relative;
+            
+            label {
+              position: absolute;
+              top: -10px;
+              left: 12px;
+              background: white;
+              padding: 0 5px;
+              font-size: 0.9rem;
+              color: #2c3e50;
+              pointer-events: none;
+              z-index: 1;
+            }
+  
+            .input-wrapper {
+              border: 2px solid #dfe6e9;
+              border-radius: 0.5rem;
+              padding: 1px;
+  
+              input {
+                width: 90%;
+                padding: 1rem;
+                border: none;
+                background: transparent;
+                font-size: 1rem;
+  
+                &:focus {
+                  outline: none;
+                }
+              }
+            }
+  
+            &:focus-within {
+              .input-wrapper {
+                border-color: rgba(45, 52, 54, 0.3);
+                box-shadow: 0 0 0 3px rgba(116, 185, 255, 0.1);
+              }
+              
+              label {
+                color: rgba(45, 52, 54, 0.7);
+              }
+            }
+          }
+        }
+  
+        .button-group {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+          margin-bottom: 1.5rem;
+  
+          .btn {
+            padding: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+  
+            &.back {
+              background: #a4b0be;
+              color: white;
+  
+              &:hover {
+                background: #747d8c;
+              }
+            }
+  
+            &.next {
+              background: #636e72;
+              color: white;
+  
+              &:hover {
+                background: #2d3436;
+              }
+  
+              &:disabled {
+                background: #dfe6e9;
+                cursor: not-allowed;
+              }
+            }
+          }
+        }
+  
+        .login-link {
+          text-align: center;
+          color: #636e72;
+          font-size: 0.9rem;
+  
+          span {
+            color: #74b9ff;
+            cursor: pointer;
+            transition: color 0.3s ease;
+  
+            &:hover {
+              color: #0984e3;
+            }
+          }
+        }
+  
+        .error-message {
+            color: #ff4757;
+            text-align: center;
+            font-size: 0.9rem;
+            position: absolute;
+            width: 100%;
+            top: 46%;
+            left: 0;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            
+            &.visible {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+      }
+    }
+  }

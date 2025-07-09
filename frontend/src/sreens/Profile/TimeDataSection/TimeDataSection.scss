@@ -1,0 +1,31 @@
+.time-data-section {
+    background: linear-gradient(135deg, #0984e3, #6c5ce7);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);
+    transition: transform 0.3s ease;
+  
+    &:hover {
+      transform: translateY(-2px);
+    }
+  
+    .time-display {
+      font-size: 14px;
+      font-weight: 600;
+    }
+  
+    .date-display {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+  }
+  
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+  }
